@@ -24,8 +24,8 @@ func main() {
 		Addr:         "localhost:9090",
 		Handler:      sm,
 		IdleTimeout:  120,
-		ReadTimeout:  1,
-		WriteTimeout: 1,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 	go func() {
 		err := s.ListenAndServe()
@@ -34,13 +34,14 @@ func main() {
 		}
 	}()
 
-	sigChan := make(chan os.Signal)
+	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
 	signal.Notify(sigChan, os.Kill)
 
 	sig := <-sigChan
 	l.Println("Recieved terminate, graceful shutdown", sig)
 
-	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	tc, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	s.Shutdown(tc)
 }
