@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/Yuraaaam/microservice_cource/working/working/handlers"
+	"github.com/Yuraaaam/microservice_cource/working/product-api/handlers"
 )
 
 func main() {
