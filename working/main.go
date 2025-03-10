@@ -23,7 +23,7 @@ func main() {
 	s := &http.Server{
 		Addr:         "localhost:9090",
 		Handler:      sm,
-		IdleTimeout:  120,
+		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
@@ -41,7 +41,7 @@ func main() {
 	sig := <-sigChan
 	l.Println("Recieved terminate, graceful shutdown", sig)
 
-	tc, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
+	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	//defer cancel()
 	s.Shutdown(tc)
 }
